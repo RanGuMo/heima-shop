@@ -3,13 +3,23 @@ import { useMemberStore } from '@/stores'
 
 const memberStore = useMemberStore()
 
-import '@/utils/http'
+// import '@/utils/http'
+// // 测试接口 的按钮事件
+// const getData = () => {
+//   uni.request({
+//     url: '/home/banner',
+//     method: 'GET',
+//   })
+// }
+
+import { http } from '@/utils/http'
 // 测试接口 的按钮事件
-const getData = () => {
-  uni.request({
-    url: '/home/banner',
+const getData = async () => {
+  const res = await http<number[]>({
+    url: '/member/profile',
     method: 'GET',
   })
+  console.log('获取数据成功', res.result)
 }
 </script>
 
