@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拟态风格的按钮</title>
+  <style>
+    .btn-container {
+      display: flex;
+      width: 500px;
+      flex-wrap: wrap;
+      background-color: #edebeb;
+    }
+
+    .btn {
+      width: 100px;
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      margin: 25px;
+
+    }
+
+    .icon {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.2),
+        -18px -18px 30px rgba(255, 255, 255, 1);
+      transform: all 0.2s eas-out;
+    }
+
+    .icon:hover {
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0.2),
+        0 0 0 rgba(255, 255, 255, 0.8),
+        inset 18px 18px 30px rgba(0, 0, 0, 0.1),
+        inset -18px -18px 30px rgba(255, 255, 255, 1);
+    }
+
+    .icon img {
+      width: 60px;
+      height: 60px;
+
+    }
+
+    span {
+      color: #708090;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>拟态风格的按钮</h1>
+  <div class="btn-container">
+    <div class="btn">
+      <div class="icon">
+        <img src="../../../static/tabs/cart_selected.png" alt="">
+      </div>
+      <span>购物车</span>
+    </div>
+    <div class="btn">
+      <div class="icon">
+        <img src="../../../static/tabs/category_selected.png" alt="">
+      </div>
+      <span>分类</span>
+    </div>
+    <div class="btn">
+      <div class="icon">
+        <img src="../../../static/tabs/home_selected.png" alt="">
+      </div>
+      <span>首页</span>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
