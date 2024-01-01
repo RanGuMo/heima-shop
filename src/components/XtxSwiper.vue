@@ -2,11 +2,17 @@
 import { ref } from 'vue'
 
 const activeIndex = ref(0)
+
+// 当swiper 下标发生变化时触发
+const onChange: UniHelper.SwiperOnChange = (event) => {
+  console.log(event.detail?.current)
+  activeIndex.value = event.detail!.current //!（非空断言） 表示断言，告诉TypeScript这个值不是null或undefined
+}
 </script>
 
 <template>
   <view class="carousel">
-    <swiper :circular="true" :autoplay="false" :interval="3000">
+    <swiper :circular="true" :autoplay="false" :interval="3000" @change="onChange">
       <swiper-item>
         <navigator url="/pages/index/index" hover-class="none" class="navigator">
           <image
