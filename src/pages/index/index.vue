@@ -6,6 +6,7 @@ import { getHomeBannerList, getHomeCategoryList, getHomeHotList } from '@/servic
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home';
 import { ref } from "vue";
+import type { XtxGuessInstance } from '@/components/components';
 
 // 1.轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -31,6 +32,10 @@ const getHomeHotData = async () => {
 }
 
 
+const guessRef = ref<XtxGuessInstance>()
+const onScrolltolower = () => {
+  guessRef.value?.getMore(); //调用子组件中 加载更多方法
+}
 
 // 页面加载时触发
 onLoad(() => {
@@ -50,8 +55,12 @@ onLoad(() => {
     <CategoryPanel :list="categoryList" />
     <!-- 热门推荐 -->
     <HotPanel :list="hotList" />
-    <!-- 猜你喜欢 -->
-    <XtxGuess />
+    <!-- 滚动容器 -->
+    <scroll-view @scrolltolower="onScrolltolower">
+      <!-- 猜你喜欢 -->
+      <XtxGuess ref="guessRef"/>
+    </scroll-view>
+
     <!-- <view class="index">index</view> -->
   </scroll-view>
 </template>

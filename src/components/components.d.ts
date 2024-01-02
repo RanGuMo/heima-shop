@@ -8,5 +8,5 @@ declare module 'vue' {
   }
 }
 
-// 组件实例类型
+// 组件实例类型 对外暴露 猜你喜欢的实例类型
 export type XtxGuessInstance = InstanceType<typeof XtxGuess>

@@ -17,6 +17,11 @@ const getHomeGoodsGuessLikeData = async () => {
 onMounted(() => {
     getHomeGoodsGuessLikeData()
 })
+
+// 对外暴露 加载更多方法
+defineExpose({
+    getMore: getHomeGoodsGuessLikeData,
+})
 </script>
 
 <template>
@@ -26,8 +31,7 @@ onMounted(() => {
     </view>
     <view class="guess">
         <navigator class="guess-item" v-for="item in guessList" :key="item.id" :url="`/pages/goods/goods?id=${item.id}`">
-            <image class="image" mode="aspectFill"
-                :src="item.picture"></image>
+            <image class="image" mode="aspectFill" :src="item.picture"></image>
             <view class="name">{{ item.name }}</view>
             <view class="price">
                 <text class="small">¥</text>
