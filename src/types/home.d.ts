@@ -12,10 +12,26 @@ export type BannerItem = {
 
 /** 首页-分类列表数据类型 */
 export type CategoryItem = {
-    /** id */
-    id: string
-    /** 分类名称 */
-    name: string
-    /** 分类图标路径 */
-    icon: string
-  }
+  /** id */
+  id: string
+  /** 分类名称 */
+  name: string
+  /** 分类图标路径 */
+  icon: string
+}
+
+/** 首页-热门推荐数据类型 */
+export type HotItem = {
+  /** 说明 */
+  alt: string
+  /** id */
+  id: string
+  /** 图片集合[ 图片路径 ] */
+  pictures: string[]
+  /** 跳转地址 */
+  target: string
+  /** 标题 */
+  title: string
+  /** 推荐类型 */
+  type: string
+}

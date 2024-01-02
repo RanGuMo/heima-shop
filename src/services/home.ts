@@ -1,5 +1,5 @@
 import { http } from '@/utils/http'
-import type { BannerItem, CategoryItem } from '@/types/home'
+import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
 
 /**
  * 首页-广告区域-小程序
@@ -28,12 +28,12 @@ export const getHomeCategoryList = () => {
 }
 /**
  * 首页-热门推荐-小程序
- * @returns 
+ * @returns
  */
 
 export const getHomeHotList = () => {
-    return http<any[]>({
-        method: 'GET',
-        url: '/home/hot/mutli',
-    })
+  return http<HotItem[]>({
+    method: 'GET',
+    url: '/home/hot/mutli',
+  })
 }

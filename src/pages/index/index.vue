@@ -4,7 +4,7 @@ import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
 import { getHomeBannerList, getHomeCategoryList, getHomeHotList } from '@/services/home';
 import { onLoad } from '@dcloudio/uni-app'
-import type { BannerItem, CategoryItem } from '@/types/home';
+import type { BannerItem, CategoryItem, HotItem } from '@/types/home';
 import { ref } from "vue";
 
 // 1.轮播图数据
@@ -23,9 +23,11 @@ const getHomeCategoryData = async () => {
 }
 
 // 3.热门推荐数据
+const hotList = ref<HotItem[]>([])
 const getHomeHotData = async () => {
   const res = await getHomeHotList()
   console.log("热门推荐数据: ", res)
+  hotList.value = res.result
 }
 
 onLoad(() => {
@@ -42,7 +44,7 @@ onLoad(() => {
   <!-- 分类面板 -->
   <CategoryPanel :list="categoryList" />
   <!-- 热门推荐 -->
-  <HotPanel />
+  <HotPanel :list="hotList"/>
 
   <!-- <view class="index">index</view> -->
 </template>
