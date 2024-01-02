@@ -2,7 +2,7 @@
 import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
-import { getHomeBannerList, getHomeCategoryList, getHomeHotList } from '@/services/home';
+import { getHomeBannerList, getHomeCategoryList, getHomeHotList, getHomeGoodsGuessLikeList } from '@/services/home';
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home';
 import { ref } from "vue";
@@ -30,10 +30,18 @@ const getHomeHotData = async () => {
   hotList.value = res.result
 }
 
+// 4.猜你喜欢
+const getHomeGoodsGuessLikeData = async () => {
+  const res = await getHomeGoodsGuessLikeList()
+  console.log("猜你喜欢数据: ", res)
+
+}
+
 onLoad(() => {
   getHomeBannerData()
   getHomeCategoryData()
   getHomeHotData()
+  getHomeGoodsGuessLikeData()
 })
 </script>
 
@@ -59,6 +67,7 @@ page {
   flex-direction: column;
   height: 100%;
 }
+
 .scroll-view {
   flex: 1;
 }

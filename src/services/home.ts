@@ -26,14 +26,25 @@ export const getHomeCategoryList = () => {
     url: '/home/category/mutli',
   })
 }
+
 /**
  * 首页-热门推荐-小程序
  * @returns
  */
-
 export const getHomeHotList = () => {
   return http<HotItem[]>({
     method: 'GET',
     url: '/home/hot/mutli',
+  })
+}
+
+/**
+ * 首页-猜你喜欢-小程序
+ * @returns 
+ */
+export const getHomeGoodsGuessLikeList = () => {
+  return http<any[]>({
+    method: 'GET',
+    url: '/home/goods/guessLike',
   })
 }
