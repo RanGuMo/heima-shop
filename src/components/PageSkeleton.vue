@@ -1,5 +1,5 @@
-
-    <!-- 骨架屏结构 -->
+<!-- 骨架屏组件 -->
+<!-- 骨架屏结构 -->
 <template name="skeleton">
     <view is="components/XtxSwiper">
         <view class="carousel XtxSwiper--carousel">
