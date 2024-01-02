@@ -1,4 +1,5 @@
 import type { PageParams } from '@/types/global'
+import type { HotResult } from '@/types/hot'
 import { http } from '@/utils/http'
 
 /**
@@ -8,7 +9,7 @@ import { http } from '@/utils/http'
  */
 type HotParams = PageParams & { subType?: string }  // 交叉类型，HotParams 的类型等于 PageParams的类型 加上subType?: string 
 export const getHotRecommendAPI = (url:string,data?:HotParams) => {
-  return http<any[]>({
+  return http<HotResult>({
     method: 'GET',
     url,
     data
