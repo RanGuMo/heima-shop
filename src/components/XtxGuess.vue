@@ -2,15 +2,24 @@
 import type { GuessItem } from '@/types/home';
 import { ref, onMounted } from 'vue';
 import { getHomeGoodsGuessLikeList } from '@/services/home';
+import type { PageParams } from '@/types/global';
 
+// 分页参数
+const pageParams:Required<PageParams> = {
+    page: 1,
+    pageSize: 10
+}
 // 猜你喜欢商品列表
 const guessList = ref<GuessItem[]>([])
 // 猜你喜欢
 const getHomeGoodsGuessLikeData = async () => {
-    const res = await getHomeGoodsGuessLikeList()
+    const res = await getHomeGoodsGuessLikeList(pageParams)
     console.log("猜你喜欢数据: ", res)
+    // 数组追加
+    guessList.value.push(...res.result.items)
+    // 更新分页参数 (页码累加)
+    pageParams.page++
     guessList.value = res.result.items
-
 }
 
 // 组件挂载完毕再进行数据的获取
