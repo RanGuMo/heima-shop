@@ -15,3 +15,10 @@ export const getHomeBannerList = (distributionSite = 1) => {
     },
   })
 }
+
+export const getHomeCategoryList = () => {
+  return http<any[]>({
+    method: 'GET',
+    url: '/home/category/mutli',
+  })
+}
