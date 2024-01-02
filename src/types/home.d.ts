@@ -4,8 +4,18 @@ export type BannerItem = {
   hrefUrl: string
   /** id */
   id: string
-  /** 跳转类型 */
+  /** 图片链接 */
   imgUrl: string
   /** 跳转类型 */
   type: number
 }
+
+/** 首页-分类列表数据类型 */
+export type CategoryItem = {
+    /** id */
+    id: string
+    /** 分类名称 */
+    name: string
+    /** 分类图标路径 */
+    icon: string
+  }

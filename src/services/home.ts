@@ -1,10 +1,10 @@
 import { http } from '@/utils/http'
-import type { BannerItem } from '@/types/home'
+import type { BannerItem, CategoryItem } from '@/types/home'
 
 /**
  * 首页-广告区域-小程序
  * @param distributionSite 广告区域展示位置（投放位置：1为首页，2为分类商品页） 默认是1
- * @returns 
+ * @returns
  */
 export const getHomeBannerList = (distributionSite = 1) => {
   return http<BannerItem[]>({
@@ -16,8 +16,12 @@ export const getHomeBannerList = (distributionSite = 1) => {
   })
 }
 
+/**
+ * 首页-分类列表
+ * @returns
+ */
 export const getHomeCategoryList = () => {
-  return http<any[]>({
+  return http<CategoryItem[]>({
     method: 'GET',
     url: '/home/category/mutli',
   })

@@ -3,20 +3,22 @@ import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import { getHomeBannerList,getHomeCategoryList } from '@/services/home';
 import { onLoad } from '@dcloudio/uni-app'
-import type { BannerItem } from '@/types/home';
+import type { BannerItem,CategoryItem } from '@/types/home';
 import { ref } from "vue";
 
 // 1.轮播图数据
 const bannerList =ref<BannerItem[]>([])
 const getHomeBannerData = async () => {
   const res = await getHomeBannerList()
-  console.log(res)
+  console.log("轮播图数据: "+res)
   bannerList.value = res.result
 }
 // 2.分类面板数据
+const categoryList = ref<CategoryItem[]>([])
 const getHomeCategoryData = async () => {
   const res = await getHomeCategoryList()
-  console.log(res)
+  console.log("分类面板数据: "+res)
+  categoryList.value = res.result
 }
 
 onLoad(() => {
@@ -30,7 +32,7 @@ onLoad(() => {
   <!-- 自定义轮播图 -->
   <XtxSwiper :list="bannerList"/>
   <!-- 分类面板 -->
-  <CategoryPanel/>
+  <CategoryPanel :list="categoryList"/>
   <!-- <view class="index">index</view> -->
 </template>
 
