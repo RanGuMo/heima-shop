@@ -34,6 +34,8 @@ const getHomeHotData = async () => {
 
 const guessRef = ref<XtxGuessInstance>()
 const onScrolltolower = () => {
+  console.log("滚动到底部了")
+  // 触底了，可以请求更多数据了
   guessRef.value?.getMore(); //调用子组件中 加载更多方法
 }
 
@@ -48,18 +50,17 @@ onLoad(() => {
 
 <template>
   <CustomNavbar />
-  <scroll-view scroll-y class="scroll-view">
+  <!-- 滚动容器 -->
+  <scroll-view scroll-y class="scroll-view" @scrolltolower="onScrolltolower">
     <!-- 自定义轮播图 -->
     <XtxSwiper :list="bannerList" />
     <!-- 分类面板 -->
     <CategoryPanel :list="categoryList" />
     <!-- 热门推荐 -->
     <HotPanel :list="hotList" />
-    <!-- 滚动容器 -->
-    <scroll-view @scrolltolower="onScrolltolower">
-      <!-- 猜你喜欢 -->
-      <XtxGuess ref="guessRef"/>
-    </scroll-view>
+    <!-- 猜你喜欢 -->
+    <XtxGuess ref="guessRef" />
+
 
     <!-- <view class="index">index</view> -->
   </scroll-view>

@@ -19,7 +19,7 @@ const getHomeGoodsGuessLikeData = async () => {
     guessList.value.push(...res.result.items)
     // 更新分页参数 (页码累加)
     pageParams.page++
-    guessList.value = res.result.items
+    // guessList.value = res.result.items
 }
 
 // 组件挂载完毕再进行数据的获取
@@ -105,7 +105,7 @@ defineExpose({
     }
 
     .name {
-        height: 70rpx;
+        height: 75rpx;
         margin: 10rpx 0;
         font-size: 26rpx;
         color: #262626;
