@@ -39,6 +39,28 @@ const onScrolltolower = () => {
   guessRef.value?.getMore(); //调用子组件中 加载更多方法
 }
 
+// 下拉刷新状态
+const isTriggered = ref(false)
+// 自定义下拉刷新事件
+const onRefresherrefresh = async () => {
+  // 开启动画
+  isTriggered.value = true
+  // 重置 猜你喜欢列表的数据
+  guessRef.value?.resetData(); //调用子组件中 重置列表数据方法
+  // 重新发起请求 加载数据
+  await Promise.all([
+    getHomeBannerData(),
+    getHomeCategoryData(),
+    getHomeHotData(),
+    guessRef.value?.getMore() //调用子组件中 加载数据方法
+  ])
+  // 关闭动画
+  isTriggered.value = false
+}
+
+
+
+
 // 页面加载时触发
 onLoad(() => {
   getHomeBannerData()
@@ -51,7 +73,8 @@ onLoad(() => {
 <template>
   <CustomNavbar />
   <!-- 滚动容器 -->
-  <scroll-view scroll-y class="scroll-view" @scrolltolower="onScrolltolower">
+  <scroll-view scroll-y class="scroll-view" @scrolltolower="onScrolltolower" refresher-enabled
+    @refresherrefresh="onRefresherrefresh" :refresher-triggered="isTriggered">
     <!-- 自定义轮播图 -->
     <XtxSwiper :list="bannerList" />
     <!-- 分类面板 -->

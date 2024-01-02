@@ -30,7 +30,7 @@ const getHomeGoodsGuessLikeData = async () => {
     if (pageParams.page < res.result.pages) {
         // 更新分页参数 (页码累加)
         pageParams.page++
-    }else{
+    } else {
         // 标记为已结束
         finish.value = true
     }
@@ -38,14 +38,22 @@ const getHomeGoodsGuessLikeData = async () => {
     // guessList.value = res.result.items
 }
 
+// 重置数据
+const resetData = () => {
+    pageParams.page = 1
+    guessList.value = []
+    finish.value = false
+}
+
 // 组件挂载完毕再进行数据的获取
 onMounted(() => {
     getHomeGoodsGuessLikeData()
 })
 
-// 对外暴露 加载更多方法
+// 对外暴露 加载更多方法 以及重置数据方法
 defineExpose({
     getMore: getHomeGoodsGuessLikeData,
+    resetData
 })
 </script>
 
@@ -64,7 +72,7 @@ defineExpose({
             </view>
         </navigator>
     </view>
-    <view class="loading-text"> {{ finish ?'没有数据了~':'正在加载...' }} </view>
+    <view class="loading-text"> {{ finish ? '没有数据了~' : '正在加载...' }} </view>
 </template>
 
 <style lang="scss">
