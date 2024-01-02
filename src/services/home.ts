@@ -17,7 +17,7 @@ export const getHomeBannerList = (distributionSite = 1) => {
 }
 
 /**
- * 首页-分类列表
+ * 首页-分类列表-小程序
  * @returns
  */
 export const getHomeCategoryList = () => {
@@ -25,4 +25,15 @@ export const getHomeCategoryList = () => {
     method: 'GET',
     url: '/home/category/mutli',
   })
+}
+/**
+ * 首页-热门推荐-小程序
+ * @returns 
+ */
+
+export const getHomeHotList = () => {
+    return http<any[]>({
+        method: 'GET',
+        url: '/home/hot/mutli',
+    })
 }
