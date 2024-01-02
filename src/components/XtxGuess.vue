@@ -5,20 +5,36 @@ import { getHomeGoodsGuessLikeList } from '@/services/home';
 import type { PageParams } from '@/types/global';
 
 // 分页参数
-const pageParams:Required<PageParams> = {
+const pageParams: Required<PageParams> = {
     page: 1,
     pageSize: 10
 }
 // 猜你喜欢商品列表
 const guessList = ref<GuessItem[]>([])
+// 是否结束
+const finish = ref(false)
 // 猜你喜欢
 const getHomeGoodsGuessLikeData = async () => {
+    // 已经结束，退出函数执行，并提示用户
+    if (finish.value === true) {
+        return uni.showToast({
+            icon: 'none',
+            title: '没有数据了~'
+        })
+    }
     const res = await getHomeGoodsGuessLikeList(pageParams)
     console.log("猜你喜欢数据: ", res)
     // 数组追加
     guessList.value.push(...res.result.items)
-    // 更新分页参数 (页码累加)
-    pageParams.page++
+    // 当前页面是否 小于 总页码
+    if (pageParams.page < res.result.pages) {
+        // 更新分页参数 (页码累加)
+        pageParams.page++
+    }else{
+        // 标记为已结束
+        finish.value = true
+    }
+
     // guessList.value = res.result.items
 }
 
@@ -48,7 +64,7 @@ defineExpose({
             </view>
         </navigator>
     </view>
-    <view class="loading-text"> 正在加载... </view>
+    <view class="loading-text"> {{ finish ?'没有数据了~':'正在加载...' }} </view>
 </template>
 
 <style lang="scss">
