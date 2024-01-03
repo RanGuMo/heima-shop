@@ -41,6 +41,26 @@ const getHotRecommendData = async () => {
 
 }
 
+// 滚动触底事件
+const onScrolltolower = async () => {
+  // 获取当前选项
+  const currSubTypes = subTypes.value[activeIndex.value]
+  //  当前选项的页面累加
+  currSubTypes.goodsItems.page++
+  // 调用接口并传参
+  const res = await getHotRecommendAPI(currHot!.url, {
+    subType: currSubTypes.id,
+    page: currSubTypes.goodsItems.page,
+    pageSize: currSubTypes.goodsItems.pageSize
+  })
+  // 提取新数据
+  const newSubTypes = res.result.subTypes[activeIndex.value]
+  // 当前选项数组追加
+  currSubTypes.goodsItems.items.push(...newSubTypes.goodsItems.items)
+  console.log("滚动触底事件: ", res);
+
+}
+
 // 页面加载
 onLoad(() => {
   getHotRecommendData()
@@ -57,13 +77,15 @@ onLoad(() => {
     </view>
     <!-- 推荐选项 -->
     <view class="tabs">
-      <text class="text" v-for="(item, index) in subTypes" :key="item.id"
-        :class="{ active: activeIndex === index }" @tap="activeIndex=index">{{ item.title }}</text>
+      <text class="text" v-for="(item, index) in subTypes" :key="item.id" :class="{ active: activeIndex === index }"
+        @tap="activeIndex = index">{{ item.title }}</text>
     </view>
     <!-- 推荐列表 -->
-    <scroll-view scroll-y class="scroll-view" v-for="(item,index) in subTypes" :key="item.id" v-show="activeIndex === index">
-      <view class="goods" >
-        <navigator hover-class="none" class="navigator" v-for="goods in item.goodsItems.items" :key="goods.id" :url="`/pages/goods/goods?id=${goods.id}`">
+    <scroll-view scroll-y class="scroll-view" v-for="(item, index) in subTypes" :key="item.id"
+      v-show="activeIndex === index" @scrolltolower="onScrolltolower">
+      <view class="goods">
+        <navigator hover-class="none" class="navigator" v-for="goods in item.goodsItems.items" :key="goods.id"
+          :url="`/pages/goods/goods?id=${goods.id}`">
           <image class="thumb" :src="goods.picture"></image>
           <view class="name ellipsis">{{ goods.name }}</view>
           <view class="price">
