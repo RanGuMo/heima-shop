@@ -55,7 +55,7 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
           <text class="symbol">¥</text>
           <text class="number">29.90</text>
         </view>
-        <view class="name ellipsis">云珍·轻软旅行长绒棉方巾 </view>
+        <view class="name ellipsis">【新疆棉】云珍·轻软旅行长绒棉方巾 </view>
         <view class="desc"> 轻巧无捻小方巾，旅行便携 </view>
       </view>
 
@@ -123,7 +123,7 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
             mode="aspectFill"
             src="https://yanxuan-item.nosdn.127.net/e0cea368f41da1587b3b7fc523f169d7.png"
           ></image>
-          <view class="name ellipsis">简约山形纹全棉提花毛巾</view>
+          <view class="name ellipsis">【新疆棉】简约山形纹全棉提花毛巾</view>
           <view class="price">
             <text class="symbol">¥</text>
             <text class="number">18.50</text>
