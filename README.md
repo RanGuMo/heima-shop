@@ -96,3 +96,27 @@ npm run dev:h5
 ├── tsconfig.json              # typescript 配置
 └── vite.config.ts             # vite 配置
 ```
+
+### 域名校验
+
+> 在小程序开发中，urlCheck 是一个开发者工具中的配置项，它的作用是用于检测代码中的请求是否符合小程序的安全要求。具体而言，它会检查小程序中的网络请求是否使用了合法的域名。
+
+> 当 urlCheck 设置为 true 时，开发者工具会检测小程序代码中的网络请求，确保请求的域名在小程序的域名白名单中。如果请求的域名不在白名单中，开发者工具会给出相应的警告或错误提示。
+
+> 这个功能有助于开发者在开发阶段及时发现并修复潜在的安全问题，避免因为使用了不合法的域名而导致小程序无法正常运行或被封禁。
+
+> 在正式发布小程序时，建议将 urlCheck 设置为 true，以确保小程序的网络请求符合安全规范。
+
+
+```js
+ "mp-weixin": {
+    "appid": "wxc1a0a6619eb07084",
+    "setting": {
+      "urlCheck": true,
+      "minified": true,
+    },
+    "usingComponents": true
+  },
+```
+"urlCheck": true 开启域名校验
+
