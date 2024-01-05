@@ -1,7 +1,31 @@
 // src/pages/goods/goods.vue
 <script setup lang="ts">
+import { getGoodsByIdAPI } from '@/services/goods'
+import { onLoad } from '@dcloudio/uni-app'
+import type { GoodsResult } from "@/types/goods"
+import { ref } from "vue"
+
+
+
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
+// 1.获取页面参数（接收其他页面传递过来的参数）
+const query = defineProps<{
+  id: string
+}>()
+
+// 2.发请求 根据商品id获取商品详情页的数据
+const goods = ref<GoodsResult>()
+const getGoodsByIdData = async () => {
+  const res = await getGoodsByIdAPI(query.id)
+  console.log("商品详情页数据：", res)
+  goods.value = res.result
+}
+
+// 页面加载
+onLoad(() => {
+  getGoodsByIdData()
+})
 </script>
 
 <template>
@@ -11,36 +35,10 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
       <!-- 商品主图 -->
       <view class="preview">
         <swiper circular>
-          <swiper-item>
-            <image
-              mode="aspectFill"
-              src="https://yanxuan-item.nosdn.127.net/99c83709ca5f9fd5c5bb35d207ad7822.png"
-            />
+          <swiper-item v-for="item in goods?.mainPictures" :key="item">
+            <image mode="aspectFill" :src="item" />
           </swiper-item>
-          <swiper-item>
-            <image
-              mode="aspectFill"
-              src="https://yanxuan-item.nosdn.127.net/f9107d47c08f0b99c097e30055c39e1a.png"
-            />
-          </swiper-item>
-          <swiper-item>
-            <image
-              mode="aspectFill"
-              src="https://yanxuan-item.nosdn.127.net/754c56785cc8c39f7414752f62d79872.png"
-            />
-          </swiper-item>
-          <swiper-item>
-            <image
-              mode="aspectFill"
-              src="https://yanxuan-item.nosdn.127.net/ef16f8127610ef56a2a10466d6dae157.jpg"
-            />
-          </swiper-item>
-          <swiper-item>
-            <image
-              mode="aspectFill"
-              src="https://yanxuan-item.nosdn.127.net/1f0c3f5d32b0e804deb9b3d56ea6c3b2.png"
-            />
-          </swiper-item>
+        
         </swiper>
         <view class="indicator">
           <text class="current">1</text>
@@ -53,10 +51,10 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
       <view class="meta">
         <view class="price">
           <text class="symbol">¥</text>
-          <text class="number">29.90</text>
+          <text class="number">{{ goods?.price }}</text>
         </view>
-        <view class="name ellipsis">【新疆棉】云珍·轻软旅行长绒棉方巾 </view>
-        <view class="desc"> 轻巧无捻小方巾，旅行便携 </view>
+        <view class="name ellipsis">{{ goods?.name }}</view>
+        <view class="desc"> {{ goods?.desc }} </view>
       </view>
 
       <!-- 操作面板 -->
@@ -84,24 +82,13 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
       <view class="content">
         <view class="properties">
           <!-- 属性详情 -->
-          <view class="item">
-            <text class="label">属性名</text>
-            <text class="value">属性值</text>
-          </view>
-          <view class="item">
-            <text class="label">属性名</text>
-            <text class="value">属性值</text>
+          <view class="item" v-for="item in goods?.details.properties" :key="item.name">
+            <text class="label">{{ item.name }}</text>
+            <text class="value">{{ item.value }}</text>
           </view>
         </view>
         <!-- 图片详情 -->
-        <image
-          mode="widthFix"
-          src="https://yanxuan-item.nosdn.127.net/a8d266886d31f6eb0d7333c815769305.jpg"
-        ></image>
-        <image
-          mode="widthFix"
-          src="https://yanxuan-item.nosdn.127.net/a9bee1cb53d72e6cdcda210071cbd46a.jpg"
-        ></image>
+        <image mode="widthFix" v-for="item in goods?.details.pictures" :key="item" :src="item"></image>
       </view>
     </view>
 
@@ -111,22 +98,13 @@ const { safeAreaInsets } = uni.getSystemInfoSync()
         <text>同类推荐</text>
       </view>
       <view class="content">
-        <navigator
-          v-for="item in 4"
-          :key="item"
-          class="goods"
-          hover-class="none"
-          :url="`/pages/goods/goods?id=`"
-        >
-          <image
-            class="image"
-            mode="aspectFill"
-            src="https://yanxuan-item.nosdn.127.net/e0cea368f41da1587b3b7fc523f169d7.png"
-          ></image>
-          <view class="name ellipsis">【新疆棉】简约山形纹全棉提花毛巾</view>
+        <navigator v-for="item in goods?.similarProducts" :key="item.id" class="goods" hover-class="none" :url="`/pages/goods/goods?id=${item.id}`">
+          <image class="image" mode="aspectFill"
+            :src="item.picture"></image>
+          <view class="name ellipsis">{{ item.name }}</view>
           <view class="price">
             <text class="symbol">¥</text>
-            <text class="number">18.50</text>
+            <text class="number">{{ item.price }}</text>
           </view>
         </navigator>
       </view>
@@ -166,6 +144,7 @@ page {
 .panel {
   margin-top: 20rpx;
   background-color: #fff;
+
   .title {
     display: flex;
     justify-content: space-between;
@@ -174,6 +153,7 @@ page {
     line-height: 1;
     padding: 30rpx 60rpx 30rpx 6rpx;
     position: relative;
+
     text {
       padding-left: 10rpx;
       font-size: 28rpx;
@@ -181,6 +161,7 @@ page {
       font-weight: 600;
       border-left: 4rpx solid #27ba9b;
     }
+
     navigator {
       font-size: 24rpx;
       color: #666;
@@ -204,13 +185,16 @@ page {
 /* 商品信息 */
 .goods {
   background-color: #fff;
+
   .preview {
     height: 750rpx;
     position: relative;
+
     .image {
       width: 750rpx;
       height: 750rpx;
     }
+
     .indicator {
       height: 40rpx;
       padding: 0 24rpx;
@@ -222,21 +206,26 @@ page {
       position: absolute;
       bottom: 30rpx;
       right: 30rpx;
+
       .current {
         font-size: 26rpx;
       }
+
       .split {
         font-size: 24rpx;
         margin: 0 1rpx 0 2rpx;
       }
+
       .total {
         font-size: 24rpx;
       }
     }
   }
+
   .meta {
     position: relative;
     border-bottom: 1rpx solid #eaeaea;
+
     .price {
       height: 130rpx;
       padding: 25rpx 30rpx 0;
@@ -245,9 +234,11 @@ page {
       box-sizing: border-box;
       background-color: #35c8a9;
     }
+
     .number {
       font-size: 56rpx;
     }
+
     .brand {
       width: 160rpx;
       height: 80rpx;
@@ -256,6 +247,7 @@ page {
       top: 26rpx;
       right: 30rpx;
     }
+
     .name {
       max-height: 88rpx;
       line-height: 1.4;
@@ -263,6 +255,7 @@ page {
       font-size: 32rpx;
       color: #333;
     }
+
     .desc {
       line-height: 1;
       padding: 0 20rpx 30rpx;
@@ -270,8 +263,10 @@ page {
       color: #cf4444;
     }
   }
+
   .action {
     padding-left: 20rpx;
+
     .item {
       height: 90rpx;
       padding-right: 60rpx;
@@ -281,15 +276,18 @@ page {
       position: relative;
       display: flex;
       align-items: center;
+
       &:last-child {
         border-bottom: 0 none;
       }
     }
+
     .label {
       width: 60rpx;
       color: #898b94;
       margin: 0 16rpx 0 10rpx;
     }
+
     .text {
       flex: 1;
       -webkit-line-clamp: 1;
@@ -300,15 +298,19 @@ page {
 /* 商品详情 */
 .detail {
   padding-left: 20rpx;
+
   .content {
     margin-left: -20rpx;
+
     .image {
       width: 100%;
     }
   }
+
   .properties {
     padding: 0 20rpx;
     margin-bottom: 30rpx;
+
     .item {
       display: flex;
       line-height: 2;
@@ -317,9 +319,11 @@ page {
       color: #333;
       border-bottom: 1rpx dashed #ccc;
     }
+
     .label {
       width: 200rpx;
     }
+
     .value {
       flex: 1;
     }
@@ -333,6 +337,7 @@ page {
     background-color: #f4f4f4;
     display: flex;
     flex-wrap: wrap;
+
     .goods {
       width: 340rpx;
       padding: 24rpx 20rpx 20rpx;
@@ -340,26 +345,31 @@ page {
       border-radius: 10rpx;
       background-color: #fff;
     }
+
     .image {
       width: 300rpx;
       height: 260rpx;
     }
+
     .name {
       height: 80rpx;
       margin: 10rpx 0;
       font-size: 26rpx;
       color: #262626;
     }
+
     .price {
       line-height: 1;
       font-size: 20rpx;
       color: #cf4444;
     }
+
     .number {
       font-size: 26rpx;
       margin-left: 2rpx;
     }
   }
+
   navigator {
     &:nth-child(even) {
       margin-right: 0;
@@ -382,9 +392,11 @@ page {
   justify-content: space-between;
   align-items: center;
   box-sizing: content-box;
+
   .buttons {
     display: flex;
-    & > view {
+
+    &>view {
       width: 220rpx;
       text-align: center;
       line-height: 72rpx;
@@ -392,20 +404,24 @@ page {
       color: #fff;
       border-radius: 72rpx;
     }
+
     .addcart {
       background-color: #ffa868;
     }
+
     .buynow,
     .payment {
       background-color: #27ba9b;
       margin-left: 20rpx;
     }
   }
+
   .icons {
     padding-right: 10rpx;
     display: flex;
     align-items: center;
     flex: 1;
+
     .icons-button {
       flex: 1;
       text-align: center;
@@ -416,10 +432,12 @@ page {
       font-size: 20rpx;
       color: #333;
       background-color: #fff;
+
       &::after {
         border: none;
       }
     }
+
     text {
       display: block;
       font-size: 34rpx;
