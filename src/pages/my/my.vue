@@ -2,8 +2,22 @@
 
 <script setup lang="ts">
 import { useMemberStore } from '@/stores';
-
+import { useGuessList } from '@/composables';
+// 1.获取会员信息
 const memberStore = useMemberStore();
+
+
+// 猜你喜欢 写法一：
+// // 获取猜你喜欢组件实例
+// const guessRef = ref<XtxGuessInstance>()
+// // 滚动触底
+// const onScrolltolower = () => {
+//   // console.log('滚动触底啦~')
+//   guessRef.value?.getMore()
+// }
+
+// 2.猜你喜欢组合式函数 写法二：
+const {guessRef,onScrolltolower}  = useGuessList();
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -17,7 +31,7 @@ const orderTypes = [
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top>
+  <scroll-view class="viewport" scroll-y enable-back-to-top  @scrolltolower="onScrolltolower">
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
       <!-- 情况1：已登录 -->
