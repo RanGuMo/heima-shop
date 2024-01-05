@@ -6,7 +6,7 @@ import { getHomeBannerList, getHomeCategoryList, getHomeHotList } from '@/servic
 import { onLoad } from '@dcloudio/uni-app'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home';
 import { ref } from "vue";
-import type { XtxGuessInstance } from '@/components/components';
+import type { XtxGuessInstance } from '@/types/components'
 import PageSkeleton from '@/components/PageSkeleton.vue'; //骨架屏导入
 // 1.轮播图数据
 const bannerList = ref<BannerItem[]>([])
