@@ -4,7 +4,7 @@ import { getGoodsByIdAPI } from '@/services/goods'
 import { onLoad } from '@dcloudio/uni-app'
 import type { GoodsResult } from "@/types/goods"
 import { ref } from "vue"
-
+import PageSkeleton from './components/PageSkeleton.vue' //骨架屏
 
 
 // 获取屏幕边界到安全区域距离
@@ -37,15 +37,17 @@ const onTapImage = (url: string) => {
     urls: goods.value!.mainPictures
   })
 }
-
+// 4.是否加载完数据，通过骨架屏实现，如果没有加载完成就先显示骨架屏
+const isFinish = ref(false)
 // 页面加载
-onLoad(() => {
-  getGoodsByIdData()
+onLoad(async () => {
+  await Promise.all([getGoodsByIdData()])
+  isFinish.value = true
 })
 </script>
 
 <template>
-  <scroll-view scroll-y class="viewport">
+  <scroll-view v-if="isFinish" scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
       <!-- 商品主图 -->
@@ -125,6 +127,9 @@ onLoad(() => {
         </navigator>
       </view>
     </view>
+  </scroll-view>
+  <scroll-view v-else class="viewport">
+    <PageSkeleton/>
   </scroll-view>
 
   <!-- 用户操作 -->
