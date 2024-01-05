@@ -22,6 +22,22 @@ const getGoodsByIdData = async () => {
   goods.value = res.result
 }
 
+// 3.轮播图交互-轮播图变化-更新下标-点击图片-大图预览
+// 当前轮播图下标
+const currentIndex = ref(0)
+// 轮播图变化-更新下标
+const onChange: UniHelper.SwiperOnChange = (event) => {
+  // 更新当前下标
+  currentIndex.value = event.detail.current
+}
+// 点击商品主图片-大图预览
+const onTapImage = (url: string) => {
+  uni.previewImage({
+    current: url,
+    urls: goods.value!.mainPictures
+  })
+}
+
 // 页面加载
 onLoad(() => {
   getGoodsByIdData()
@@ -34,16 +50,16 @@ onLoad(() => {
     <view class="goods">
       <!-- 商品主图 -->
       <view class="preview">
-        <swiper circular>
+        <swiper circular @change="onChange">
           <swiper-item v-for="item in goods?.mainPictures" :key="item">
-            <image mode="aspectFill" :src="item" />
+            <image @tap="onTapImage(item)" mode="aspectFill" :src="item" />
           </swiper-item>
-        
+
         </swiper>
         <view class="indicator">
-          <text class="current">1</text>
+          <text class="current">{{ currentIndex + 1 }}</text>
           <text class="split">/</text>
-          <text class="total">5</text>
+          <text class="total">{{ goods?.mainPictures.length }}</text>
         </view>
       </view>
 
@@ -98,9 +114,9 @@ onLoad(() => {
         <text>同类推荐</text>
       </view>
       <view class="content">
-        <navigator v-for="item in goods?.similarProducts" :key="item.id" class="goods" hover-class="none" :url="`/pages/goods/goods?id=${item.id}`">
-          <image class="image" mode="aspectFill"
-            :src="item.picture"></image>
+        <navigator v-for="item in goods?.similarProducts" :key="item.id" class="goods" hover-class="none"
+          :url="`/pages/goods/goods?id=${item.id}`">
+          <image class="image" mode="aspectFill" :src="item.picture"></image>
           <view class="name ellipsis">{{ item.name }}</view>
           <view class="price">
             <text class="symbol">¥</text>
