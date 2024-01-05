@@ -44,6 +44,12 @@ onLoad(async () => {
   await Promise.all([getGoodsByIdData()])
   isFinish.value = true
 })
+
+// 5.弹出层组件ref
+const popup = ref<{
+  open: (type?: UniHelper.UniPopupType) => void
+  close: () => void
+}>()
 </script>
 
 <template>
@@ -85,7 +91,7 @@ onLoad(async () => {
           <text class="label">送至</text>
           <text class="text ellipsis"> 请选择收获地址 </text>
         </view>
-        <view class="item arrow">
+        <view class="item arrow" @tap="popup?.open('bottom')">
           <text class="label">服务</text>
           <text class="text ellipsis"> 无忧退 快速退款 免费包邮 </text>
         </view>
@@ -129,7 +135,7 @@ onLoad(async () => {
     </view>
   </scroll-view>
   <scroll-view v-else class="viewport">
-    <PageSkeleton/>
+    <PageSkeleton />
   </scroll-view>
 
   <!-- 用户操作 -->
@@ -148,6 +154,13 @@ onLoad(async () => {
       <view class="buynow"> 立即购买 </view>
     </view>
   </view>
+
+  <!-- uni-ui 弹出层 -->
+  <uni-popup ref="popup" type="bottom" background-color="#fff">
+    <view>内容1</view>
+    <view>内容2</view>
+    <button @tap="popup?.close()">关闭弹出层</button>
+  </uni-popup>
 </template>
 
 <style lang="scss">
