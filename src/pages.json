@@ -96,5 +96,28 @@
 				"selectedIconPath": "static/tabs/user_selected.png"
 			}
 		]
-	}
+	},
+	// 分包加载规则(当用户进入【我的】页面时，由框架自动预下载【会员模块】的分包，提升进入后续分包页面时的启动速度。)
+	"subPackages": [
+		{
+		  // 子包的根目录
+		  "root": "pagesMember",
+		  // 页面路径和窗口表现
+		  "pages": [
+			{
+			  "path": "settings/settings",
+			  "style": {
+				"navigationBarTitleText": "设置"
+			  }
+			}
+		  ]
+		}
+	  ],
+	  // 分包预下载规则
+	  "preloadRule": {
+		"pages/my/my": {
+		  "network": "all", 
+		  "packages": ["pagesMember"] 
+		}
+	  }
 }
