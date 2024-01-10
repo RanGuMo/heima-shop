@@ -118,5 +118,5 @@ npm run dev:h5
     "usingComponents": true
   },
 ```
-"urlCheck": true 开启域名校验
+`"urlCheck": true` 表示开启域名校验
 
