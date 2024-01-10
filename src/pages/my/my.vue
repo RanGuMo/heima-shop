@@ -17,7 +17,7 @@ const memberStore = useMemberStore();
 // }
 
 // 2.猜你喜欢组合式函数 写法二：
-const {guessRef,onScrolltolower}  = useGuessList();
+const { guessRef, onScrolltolower } = useGuessList();
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -31,20 +31,20 @@ const orderTypes = [
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top  @scrolltolower="onScrolltolower">
+  <scroll-view class="viewport" scroll-y enable-back-to-top @scrolltolower="onScrolltolower">
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
       <!-- 情况1：已登录 -->
       <view class="overview" v-if="memberStore.profile">
         <navigator url="/pagesMember/profile/profile" hover-class="none">
-          <image
-            class="avatar"
-            mode="aspectFill"
-            :src="memberStore.profile.avatar"
-          ></image>
+          <!--  aspectFill：保持纵横比并填充容器，可能会裁剪图像以适应容器。
+                aspectFit：保持纵横比并适应容器，可能会在容器内留有空白。
+                cover：保持纵横比并填充容器，但不裁剪图像，可能会使图像的一部分被裁剪。
+                contain：保持纵横比并适应容器，图像完全包含在容器内。 -->
+          <image class="avatar" mode="aspectFill" :src="memberStore.profile.avatar"></image>
         </navigator>
         <view class="meta">
-          <view class="nickname"> {{memberStore.profile.nickname || memberStore.profile.account}} </view>
+          <view class="nickname"> {{ memberStore.profile.nickname || memberStore.profile.account }} </view>
           <navigator class="extra" url="/pagesMember/profile/profile" hover-class="none">
             <text class="update">更新头像昵称</text>
           </navigator>
@@ -53,11 +53,9 @@ const orderTypes = [
       <!-- 情况2：未登录 -->
       <view class="overview" v-else>
         <navigator url="/pages/login/login" hover-class="none">
-          <image
-            class="avatar gray"
-            mode="aspectFill"
-            src="http://yjy-xiaotuxian-dev.oss-cn-beijing.aliyuncs.com/picture/2021-04-06/db628d42-88a7-46e7-abb8-659448c33081.png"
-          ></image>
+          <image class="avatar gray" mode="aspectFill"
+            src="http://yjy-xiaotuxian-dev.oss-cn-beijing.aliyuncs.com/picture/2021-04-06/db628d42-88a7-46e7-abb8-659448c33081.png">
+          </image>
         </navigator>
         <view class="meta">
           <navigator url="/pages/login/login" hover-class="none" class="nickname">
@@ -82,14 +80,8 @@ const orderTypes = [
       </view>
       <view class="section">
         <!-- 订单 -->
-        <navigator
-          v-for="item in orderTypes"
-          :key="item.type"
-          :class="item.icon"
-          :url="`/pagesOrder/list/list?type=${item.type}`"
-          class="navigator"
-          hover-class="none"
-        >
+        <navigator v-for="item in orderTypes" :key="item.type" :class="item.icon"
+          :url="`/pagesOrder/list/list?type=${item.type}`" class="navigator" hover-class="none">
           {{ item.text }}
         </navigator>
         <!-- 客服 -->
@@ -214,17 +206,20 @@ page {
     display: flex;
     justify-content: space-between;
     padding: 40rpx 20rpx 10rpx;
+
     .navigator,
     .contact {
       text-align: center;
       font-size: 24rpx;
       color: #333;
+
       &::before {
         display: block;
         font-size: 60rpx;
         color: #ff9545;
       }
     }
+
     .contact {
       padding: 0;
       margin: 0;
