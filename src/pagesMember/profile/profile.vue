@@ -8,11 +8,40 @@ import { ref } from 'vue'
 
 // 1.获取个人信息
 const profile = ref<ProfileDetail>()
-const getMemberProfileData = async () =>{
-  const res =  await getMemberProfileAPI()
+const getMemberProfileData = async () => {
+  const res = await getMemberProfileAPI()
   profile.value = res.result
 }
 
+
+// 2.更换头像
+const onAvatarChange = async () => {
+  // 调用拍照 或者 选择图片
+  uni.chooseMedia({
+    // 文件个数
+    count: 1,
+    // 文件类型
+    mediaType: ['image'],
+    success: (res) => {
+      //  本地路径
+      const { tempFilePath } = res.tempFiles[0]
+      uni.uploadFile({
+        url: '/member/profile/avatar',
+        name: 'file',
+        filePath: tempFilePath,
+        success: (res) => {
+          if (res.statusCode === 200) {
+            const avatar = JSON.parse(res.data).result.avatar
+            profile.value!.avatar = avatar
+            uni.showToast({ icon: 'success', title: '头像更新成功' })
+          } else {
+            uni.showToast({ icon: 'error', title: '头像更新失败' })
+          }
+        },
+      })
+    },
+  })
+}
 onLoad(() => {
   getMemberProfileData()
 })
@@ -27,7 +56,7 @@ onLoad(() => {
     </view>
     <!-- 头像 -->
     <view class="avatar">
-      <view class="avatar-content">
+      <view class="avatar-content" @tap="onAvatarChange">
         <image class="image" :src="profile?.avatar" mode="aspectFill" />
         <text class="text">点击修改头像</text>
       </view>
@@ -48,24 +77,18 @@ onLoad(() => {
           <text class="label">性别</text>
           <radio-group>
             <label class="radio">
-              <radio value="男" color="#27ba9b" :checked="profile?.gender ==='男'" />
+              <radio value="男" color="#27ba9b" :checked="profile?.gender === '男'" />
               男
             </label>
             <label class="radio">
-              <radio value="女" color="#27ba9b" :checked="profile?.gender ==='女'" />
+              <radio value="女" color="#27ba9b" :checked="profile?.gender === '女'" />
               女
             </label>
           </radio-group>
         </view>
         <view class="form-item">
           <text class="label">生日</text>
-          <picker
-            class="picker"
-            mode="date"
-            start="1900-01-01"
-            :end="new Date()"
-            :value="profile?.birthday"
-          >
+          <picker class="picker" mode="date" start="1900-01-01" :end="new Date()" :value="profile?.birthday">
             <view v-if="profile?.birthday">{{ profile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
@@ -201,6 +224,7 @@ page {
     .picker {
       flex: 1;
     }
+
     .placeholder {
       color: #808080;
     }
