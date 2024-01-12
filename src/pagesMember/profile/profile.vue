@@ -1,18 +1,18 @@
 <script setup lang="ts">
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
-import { getMemberProfileAPI } from '@/services/profile';
+import { getMemberProfileAPI, putMemberProfileAPI } from '@/services/profile'
 import type { ProfileDetail } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 
-// 1.获取个人信息
-const profile = ref<ProfileDetail>()
+// 1.获取个人信息，修改个人信息需提供初始值
+// const profile = ref<ProfileDetail>()
+const profile = ref({} as ProfileDetail)
 const getMemberProfileData = async () => {
   const res = await getMemberProfileAPI()
   profile.value = res.result
 }
-
 
 // 2.更换头像
 const onAvatarChange = async () => {
@@ -41,6 +41,20 @@ const onAvatarChange = async () => {
       })
     },
   })
+}
+
+// 3.保存个人信息
+const onSubmit = async () => {
+  // 3.1.修改个人信息
+  const res = await putMemberProfileAPI({
+    nickname: profile.value?.nickname,
+  })
+  //  3.2.成功提示
+  uni.showToast({ icon: 'success', title: '保存成功' })
+}
+
+const updateNickname = (event: InputEvent) => {
+  profile.value!.nickname = (event.target as HTMLInputElement).value
 }
 onLoad(() => {
   getMemberProfileData()
@@ -71,7 +85,8 @@ onLoad(() => {
         </view>
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" :value="profile?.nickname" />
+          <!-- <input class="input" type="text" :value="profile?.nickname" @input="updateNickname" placeholder="请填写昵称" /> -->
+          <input class="input" type="text" v-model="profile.nickname" placeholder="请填写昵称" />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
@@ -88,7 +103,13 @@ onLoad(() => {
         </view>
         <view class="form-item">
           <text class="label">生日</text>
-          <picker class="picker" mode="date" start="1900-01-01" :end="new Date()" :value="profile?.birthday">
+          <picker
+            class="picker"
+            mode="date"
+            start="1900-01-01"
+            :end="new Date()"
+            :value="profile?.birthday"
+          >
             <view v-if="profile?.birthday">{{ profile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
@@ -106,7 +127,7 @@ onLoad(() => {
         </view>
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button">保 存</button>
+      <button class="form-button" @tap="onSubmit">保 存</button>
     </view>
   </view>
 </template>
