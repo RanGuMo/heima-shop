@@ -5,6 +5,7 @@ import { getMemberProfileAPI, putMemberProfileAPI } from '@/services/profile'
 import type { ProfileDetail } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import { useMemberStore } from '@/stores'
 
 // 1.获取个人信息，修改个人信息需提供初始值
 // const profile = ref<ProfileDetail>()
@@ -32,7 +33,10 @@ const onAvatarChange = async () => {
         success: (res) => {
           if (res.statusCode === 200) {
             const avatar = JSON.parse(res.data).result.avatar
+            // 个人信息页数据更新
             profile.value!.avatar = avatar
+            // 4.1.Store头像更新
+            memberStore.profile!.avatar = avatar
             uni.showToast({ icon: 'success', title: '头像更新成功' })
           } else {
             uni.showToast({ icon: 'error', title: '头像更新失败' })
@@ -49,13 +53,22 @@ const onSubmit = async () => {
   const res = await putMemberProfileAPI({
     nickname: profile.value?.nickname,
   })
+  // 4.2.更新Store昵称
+  memberStore.profile!.nickname = res.result.nickname
+  // 4.3.返回上一页
+  setTimeout(() => {
+    uni.navigateBack()
+  }, 400)
   //  3.2.成功提示
   uni.showToast({ icon: 'success', title: '保存成功' })
 }
 
-const updateNickname = (event: InputEvent) => {
-  profile.value!.nickname = (event.target as HTMLInputElement).value
-}
+// 4.更新store信息
+const memberStore = useMemberStore()
+
+// const updateNickname = (event: InputEvent) => {
+//   profile.value!.nickname = (event.target as HTMLInputElement).value
+// }
 onLoad(() => {
   getMemberProfileData()
 })
