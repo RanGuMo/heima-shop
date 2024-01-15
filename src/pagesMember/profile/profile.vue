@@ -54,6 +54,8 @@ const onSubmit = async () => {
     nickname: profile.value?.nickname,
     //5.1.性别修改
     gender: profile.value?.gender,
+    //6.1.生日修改
+    birthday: profile.value?.birthday,
   })
   // 4.2.更新Store昵称
   memberStore.profile!.nickname = res.result.nickname
@@ -71,6 +73,11 @@ const memberStore = useMemberStore()
 // 5.性别修改
 const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
   profile.value.gender = ev.detail.value as Gender
+}
+
+// 6.生日修改
+const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
+  profile.value.birthday = ev.detail.value
 }
 
 // const updateNickname = (event: InputEvent) => {
@@ -124,6 +131,7 @@ onLoad(() => {
         <view class="form-item">
           <text class="label">生日</text>
           <picker
+            @change="onBirthdayChange"
             class="picker"
             mode="date"
             start="1900-01-01"
