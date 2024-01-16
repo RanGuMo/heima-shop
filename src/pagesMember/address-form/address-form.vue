@@ -12,6 +12,13 @@ const form = ref({
   address: '', // 详细地址
   isDefault: 0, // 默认地址，1为是，0为否
 })
+
+// 1.获取页面参数
+const query = defineProps<{
+  id?: string
+}>()
+//2.动态设置标题
+uni.setNavigationBarTitle({ title: query.id ? '编辑地址' : '新增地址' })
 </script>
 
 <template>
