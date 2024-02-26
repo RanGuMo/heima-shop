@@ -102,6 +102,15 @@ const gotoPayment = () => {
   // 跳转到结算页
   uni.showToast({ title: '等待完成' })
 }
+
+// 7.是否适配底部安全区域
+defineProps<{
+  safeAreaInsetBottom?: boolean
+}>()
+
+// 7.1.获取屏幕边界到安全区域距离
+const { safeAreaInsets } = uni.getSystemInfoSync()
+console.log(safeAreaInsets?.bottom)
 </script>
 
 <template>
@@ -171,8 +180,11 @@ const gotoPayment = () => {
           <button class="button">去首页看看</button>
         </navigator>
       </view>
-      <!-- 吸底工具栏 -->
-      <view class="toolbar">
+      <!-- 吸底工具栏  7.3.到底部的安全距离 -->
+      <view
+        class="toolbar"
+        :style="{ paddingBottom: safeAreaInsetBottom ? safeAreaInsets?.bottom + 'px' : 0 }"
+      >
         <text @tap="onChangeSelectedAll" class="all" :class="{ checked: isSelectedAll }">全选</text>
         <text class="text">合计:</text>
         <text class="amount">{{ selectedCartListMoney }}</text>
