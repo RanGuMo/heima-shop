@@ -2,11 +2,12 @@
 <script setup lang="ts">
 import { getGoodsByIdAPI } from '@/services/goods'
 import { onLoad } from '@dcloudio/uni-app'
-import type { GoodsResult } from "@/types/goods"
-import { ref } from "vue"
+import type { GoodsResult } from '@/types/goods'
+import { ref } from 'vue'
 import PageSkeleton from './components/PageSkeleton.vue' //骨架屏
 import AddressPanel from './components/AddressPanel.vue' //地址弹出层
 import ServicePanel from './components/ServicePanel.vue' // 服务弹出层
+import type { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -19,8 +20,24 @@ const query = defineProps<{
 const goods = ref<GoodsResult>()
 const getGoodsByIdData = async () => {
   const res = await getGoodsByIdAPI(query.id)
-  console.log("商品详情页数据：", res)
+  console.log('商品详情页数据：', res)
   goods.value = res.result
+  // 7.3.SKU组件所需格式
+  localdata.value = {
+    _id: res.result.id,
+    name: res.result.name,
+    goods_thumb: res.result.mainPictures[0],
+    spec_list: res.result.specs.map((v) => ({ name: v.name, list: v.values })),
+    sku_list: res.result.skus.map((v) => ({
+      _id: v.id,
+      goods_id: res.result.id,
+      goods_name: res.result.name,
+      image: v.picture,
+      price: v.price * 100, // 注意：需要乘以 100
+      stock: v.inventory,
+      sku_name_arr: v.specs.map((vv) => vv.valueName),
+    })),
+  }
 }
 
 // 3.轮播图交互-轮播图变化-更新下标-点击图片-大图预览
@@ -35,7 +52,7 @@ const onChange: UniHelper.SwiperOnChange = (event) => {
 const onTapImage = (url: string) => {
   uni.previewImage({
     current: url,
-    urls: goods.value!.mainPictures
+    urls: goods.value!.mainPictures,
   })
 }
 // 4.是否加载完数据，通过骨架屏实现，如果没有加载完成就先显示骨架屏
@@ -59,9 +76,18 @@ const openPopup = (name: typeof popupName.value) => {
   popupName.value = name
   popup.value?.open('bottom')
 }
+
+// 7.是否显示SKU组件
+const isShowSku = ref(false)
+// 7.2.商品信息
+const localdata = ref({} as SkuPopupLocaldata)
 </script>
 
 <template>
+  <!-- 7.1.SKU弹窗组件 -->
+  <vk-data-goods-sku-popup v-model="isShowSku" :localdata="localdata" />
+  <!-- 弹窗测试 -->
+  <!-- <button @tap="isShowSku = true">打开 SKU 弹窗</button> -->
   <scroll-view v-if="isFinish" scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
@@ -71,7 +97,6 @@ const openPopup = (name: typeof popupName.value) => {
           <swiper-item v-for="item in goods?.mainPictures" :key="item">
             <image @tap="onTapImage(item)" mode="aspectFill" :src="item" />
           </swiper-item>
-
         </swiper>
         <view class="indicator">
           <text class="current">{{ currentIndex + 1 }}</text>
@@ -92,7 +117,7 @@ const openPopup = (name: typeof popupName.value) => {
 
       <!-- 操作面板 -->
       <view class="action">
-        <view class="item arrow">
+        <view @tap="isShowSku = true" class="item arrow">
           <text class="label">选择</text>
           <text class="text ellipsis"> 请选择商品规格 </text>
         </view>
@@ -121,7 +146,12 @@ const openPopup = (name: typeof popupName.value) => {
           </view>
         </view>
         <!-- 图片详情 -->
-        <image mode="widthFix" v-for="item in goods?.details.pictures" :key="item" :src="item"></image>
+        <image
+          mode="widthFix"
+          v-for="item in goods?.details.pictures"
+          :key="item"
+          :src="item"
+        ></image>
       </view>
     </view>
 
@@ -131,8 +161,13 @@ const openPopup = (name: typeof popupName.value) => {
         <text>同类推荐</text>
       </view>
       <view class="content">
-        <navigator v-for="item in goods?.similarProducts" :key="item.id" class="goods" hover-class="none"
-          :url="`/pages/goods/goods?id=${item.id}`">
+        <navigator
+          v-for="item in goods?.similarProducts"
+          :key="item.id"
+          class="goods"
+          hover-class="none"
+          :url="`/pages/goods/goods?id=${item.id}`"
+        >
           <image class="image" mode="aspectFill" :src="item.picture"></image>
           <view class="name ellipsis">{{ item.name }}</view>
           <view class="price">
@@ -441,7 +476,7 @@ page {
   .buttons {
     display: flex;
 
-    &>view {
+    & > view {
       width: 220rpx;
       text-align: center;
       line-height: 72rpx;
