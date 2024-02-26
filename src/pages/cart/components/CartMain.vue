@@ -11,6 +11,8 @@ import type { CartItem } from '@/types/cart'
 import { onShow } from '@dcloudio/uni-app'
 import { ref, computed } from 'vue'
 
+import { useGuessList } from '@/composables'
+
 // 1.获取会员Store
 const memberStore = useMemberStore()
 // 2.获取购物车数据
@@ -111,10 +113,13 @@ defineProps<{
 // 7.1.获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 console.log(safeAreaInsets?.bottom)
+
+// 8.猜你喜欢
+const { guessRef, onScrolltolower } = useGuessList()
 </script>
 
 <template>
-  <scroll-view scroll-y class="scroll-view">
+  <scroll-view scroll-y class="scroll-view" @scrolltolower="onScrolltolower">
     <!-- 已登录: 显示购物车 -->
     <template v-if="memberStore.profile">
       <!-- 购物车列表 -->
