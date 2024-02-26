@@ -10,3 +10,13 @@ export const postMemberCartAPI = (data: { skuId: string; count: number }) => {
     data,
   })
 }
+
+/**
+ * 获取购物车列表
+ */
+export const getMemberCartAPI = () => {
+  return http<CartItem[]>({
+    method: 'GET',
+    url: '/member/cart',
+  })
+}

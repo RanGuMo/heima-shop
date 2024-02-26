@@ -1,9 +1,9 @@
 // src/pages/login/login.vue
 
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app';
+import { onLoad } from '@dcloudio/uni-app'
 import { postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '@/services/login'
-import { useMemberStore } from "@/stores";
+import { useMemberStore } from '@/stores'
 import type { LoginResult } from '@/types/member'
 
 // 1.获取登录凭证
@@ -11,15 +11,12 @@ let code = ''
 onLoad(async () => {
   const res = await wx.login()
   code = res.code
-  console.log(code);
-
+  console.log(code)
 })
-
-
 
 // 2.获取用户手机号码（企业中写法）
 const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
-  console.log(ev);
+  console.log(ev)
   const encryptedData = ev.detail!.encryptedData!
   const iv = ev.detail!.iv!
   const res = await postLoginWxMinAPI({ code, encryptedData, iv })
@@ -32,9 +29,7 @@ const onGetphonenumberSimple = async () => {
   const res = await postLoginWxMinSimpleAPI('13123456789')
   console.log(res)
   loginSuccess(res.result)
-
 }
-
 
 // 3.登录成功后跳转到my页面
 const memberStore = useMemberStore()
@@ -45,16 +40,19 @@ const loginSuccess = (profile: LoginResult) => {
   uni.showToast({ icon: 'none', title: '登录成功' })
   // 页面跳转，登录成功后跳转到my页面
   setTimeout(() => {
-    uni.switchTab({ url: '/pages/my/my' })
+    // uni.switchTab({ url: '/pages/my/my' })
+    // 直接返回上一页，用户体验好。（例如购物车那里去登录的，登录成功就会回到购物车页面）
+    uni.navigateBack()
   }, 500)
 }
-
 </script>
 
 <template>
   <view class="viewport">
     <view class="logo">
-      <image src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/logo_icon.png"></image>
+      <image
+        src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/logo_icon.png"
+      ></image>
     </view>
     <view class="login">
       <!-- 网页端表单登录 -->
