@@ -102,7 +102,8 @@ const gotoPayment = () => {
     })
   }
   // 跳转到结算页
-  uni.showToast({ title: '等待完成' })
+  // uni.showToast({ title: '等待完成' })
+  uni.navigateTo({ url: '/pagesOrder/create/create' })
 }
 
 // 7.是否适配底部安全区域
