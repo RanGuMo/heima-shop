@@ -78,7 +78,7 @@ const onOrderSubmit = async () => {
 </script>
 
 <template>
-  <scroll-view scroll-y class="viewport">
+  <scroll-view enable-back-to-top scroll-y class="viewport">
     <!-- 收货地址 -->
     <navigator
       v-if="selecteAddress"
@@ -153,6 +153,7 @@ const onOrderSubmit = async () => {
       </view>
     </view>
   </scroll-view>
+  <view style="padding-top: 120rpx"> </view>
 
   <!-- 吸底工具栏 -->
   <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
