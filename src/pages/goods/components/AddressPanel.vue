@@ -1,9 +1,46 @@
 // AddressPanel.vue
 <script setup lang="ts">
+import { getMemberAddressAPI } from '@/services/address'
+import { useAddressStore } from '@/stores/modules/address'
+import type { AddressItem } from '@/types/address'
+import { onShow } from '@dcloudio/uni-app'
+import { ref, onMounted } from 'vue'
+
 //子调用父
 const emit = defineEmits<{
   (event: 'close'): void
 }>()
+
+// 1.获取收货地址列表数据
+const addressList = ref<AddressItem[]>([])
+const getMemberAddressData = async () => {
+  const res = await getMemberAddressAPI()
+  addressList.value = res.result
+  console.log(res.result)
+}
+
+getMemberAddressData()
+onShow(() => {
+  getMemberAddressData()
+})
+
+// 修改选中收货地址
+const addressStore = useAddressStore()
+const selectAddress = (item: AddressItem) => {
+  // 修改选中收货地址
+  addressStore.changeSelectedAddress(item)
+  // 关闭弹层
+  emit('close')
+}
+
+const selectIcon = (item: AddressItem) => {
+  return item.id == addressStore.selectedAddress?.id ? 'icon-checked' : 'icon-ring'
+}
+
+// 新建收货地址
+const newAddress = () => {
+  uni.navigateTo({ url: '/pagesMember/address-form/address-form' })
+}
 </script>
 
 <template>
@@ -14,12 +51,12 @@ const emit = defineEmits<{
     <view class="title">配送至</view>
     <!-- 内容 -->
     <view class="content">
-      <view class="item">
-        <view class="user">李明 13824686868</view>
-        <view class="address">北京市顺义区后沙峪地区安平北街6号院</view>
-        <text class="icon icon-checked"></text>
+      <view @tap="selectAddress(item)" class="item" v-for="item in addressList" :key="item.id">
+        <view class="user">{{ item.receiver }} {{ item.contact }}</view>
+        <view class="address">{{ item.fullLocation }}{{ item.address }}</view>
+        <text class="icon" :class="selectIcon(item)"></text>
       </view>
-      <view class="item">
+      <!-- <view class="item">
         <view class="user">王东 13824686868</view>
         <view class="address">北京市顺义区后沙峪地区安平北街6号院</view>
         <text class="icon icon-ring"></text>
@@ -28,10 +65,10 @@ const emit = defineEmits<{
         <view class="user">张三 13824686868</view>
         <view class="address">北京市朝阳区孙河安平北街6号院</view>
         <text class="icon icon-ring"></text>
-      </view>
+      </view> -->
     </view>
     <view class="footer">
-      <view class="button primary"> 新建地址 </view>
+      <view class="button primary" @tap="newAddress"> 新建地址 </view>
       <view v-if="false" class="button primary">确定</view>
     </view>
   </view>

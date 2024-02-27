@@ -13,6 +13,7 @@ import type {
   SkuPopupLocaldata,
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import { postMemberCartAPI } from '@/services/cart'
+import { useAddressStore } from '@/stores/modules/address'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -121,6 +122,14 @@ const onBuyNow = (ev: SkuPopupEvent) => {
   uni.navigateTo({ url: `/pagesOrder/create/create?skuId=${ev._id}&count=${ev.buy_num}` })
   isShowSku.value = false
 }
+
+const addressStore = useAddressStore()
+// 收货地址
+const addressText = computed(() => {
+  return addressStore.selectedAddress
+    ? addressStore.selectedAddress.fullLocation + ' ' + addressStore.selectedAddress.address
+    : '请选择收货地址'
+})
 </script>
 
 <template>
@@ -177,7 +186,7 @@ const onBuyNow = (ev: SkuPopupEvent) => {
         </view>
         <view class="item arrow" @tap="openPopup('address')">
           <text class="label">送至</text>
-          <text class="text ellipsis"> 请选择收获地址 </text>
+          <text class="text ellipsis"> {{ addressText }} </text>
         </view>
         <view class="item arrow" @tap="openPopup('service')">
           <text class="label">服务</text>
@@ -260,7 +269,7 @@ const onBuyNow = (ev: SkuPopupEvent) => {
     <!-- <view>内容1</view>
     <view>内容2</view>
     <button @tap="popup?.close()">关闭弹出层</button> -->
-    <AddressPanel v-if="popupName === 'address'" @close="popup?.close()" />
+    <AddressPanel v-if="popupName === 'address'" @close="popup?.close()" ref="addressPanelRef" />
     <ServicePanel v-if="popupName === 'service'" @close="popup?.close()" />
   </uni-popup>
 </template>
