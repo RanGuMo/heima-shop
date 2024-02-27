@@ -1,4 +1,5 @@
 import type { AddressItem, AddressParams } from '@/types/address'
+import type { OrderPreResult } from '@/types/order'
 import { http } from '@/utils/http'
 
 /**
