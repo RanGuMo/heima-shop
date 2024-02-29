@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { OrderState, orderStateList } from '@/services/constants'
 import type { OrderResult } from '@/types/order'
 import { getMemberOrderByIdAPI } from '@/services/order'
+import PageSkeleton from './components/PageSkeleton.vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
