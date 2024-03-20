@@ -6,6 +6,7 @@ import type { OrderItem } from '@/types/order'
 import type { OrderListParams } from '@/types/order'
 import { onMounted, ref } from 'vue'
 import { getPayMockAPI, getPayWxPayMiniPayAPI } from '@/services/pay'
+import { putMemberOrderReceiptByIdAPI, deleteMemberOrderAPI } from '@/services/order'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -34,8 +35,6 @@ onMounted(() => {
 })
 
 // 订单支付
-
-// 订单支付
 const onOrderPay = async (id: string) => {
   if (import.meta.env.DEV) {
     // 开发环境模拟支付
@@ -50,6 +49,22 @@ const onOrderPay = async (id: string) => {
   // 更新订单状态
   const order = orderList.value.find((v) => v.id === id)
   order!.orderState = OrderState.DaiFaHuo
+}
+
+// 确认收货
+const onOrderConfirm = (id: string) => {
+  uni.showModal({
+    content: '为保障您的权益，请收到货并确认无误后，再确认收货',
+    success: async (res) => {
+      if (res.confirm) {
+        await putMemberOrderReceiptByIdAPI(id)
+        uni.showToast({ icon: 'success', title: '确认收货成功' })
+        // 确认成功，更新为待评价
+        const order = orderList.value.find((v) => v.id === id)
+        order!.orderState = OrderState.DaiPingJia
+      }
+    },
+  })
 }
 </script>
 
@@ -101,7 +116,10 @@ const onOrderPay = async (id: string) => {
             再次购买
           </navigator>
           <!-- 待收货状态: 展示确认收货 -->
-          <view v-if="order.orderState === OrderState.DaiShouHuo" class="button primary"
+          <view
+            v-if="order.orderState === OrderState.DaiShouHuo"
+            class="button primary"
+            @tap="onOrderConfirm(order.id)"
             >确认收货</view
           >
         </template>
