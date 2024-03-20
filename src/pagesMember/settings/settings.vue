@@ -27,12 +27,14 @@ const onLogout = () => {
         我的收货地址
       </navigator>
     </view>
+    <!-- #ifdef MP-WEIXIN -->
     <!-- 列表2 -->
     <view class="list">
       <button hover-class="none" class="item arrow" open-type="openSetting">授权管理</button>
       <button hover-class="none" class="item arrow" open-type="feedback">问题反馈</button>
       <button hover-class="none" class="item arrow" open-type="contact">联系我们</button>
     </view>
+    <!-- #endif -->
     <!-- 列表3 -->
     <view class="list">
       <!-- <navigator hover-class="none" class="item arrow" url=" ">关于小兔鲜儿</navigator> -->
@@ -60,6 +62,7 @@ page {
   background-color: #fff;
   margin-bottom: 20rpx;
   border-radius: 10rpx;
+
   .item {
     line-height: 90rpx;
     padding-left: 10rpx;
@@ -70,19 +73,23 @@ page {
     text-align: left;
     border-radius: 0;
     background-color: #fff;
+
     &::after {
       width: auto;
       height: auto;
       left: auto;
       border: none;
     }
+
     &:first-child {
       border: none;
     }
+
     &::after {
       right: 5rpx;
     }
   }
+
   .arrow::after {
     content: '\e6c2';
     position: absolute;
@@ -101,6 +108,7 @@ page {
   margin-top: 40rpx;
   font-size: 32rpx;
   color: #333;
+
   .button {
     background-color: #fff;
     margin-bottom: 20rpx;

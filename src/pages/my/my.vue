@@ -95,7 +95,9 @@ const orderTypes = [
           {{ item.text }}
         </navigator>
         <!-- 客服 -->
+        <!-- #ifdef MP-WEIXIN -->
         <button class="contact icon-handset" open-type="contact">售后</button>
+        <!-- #endif -->
       </view>
     </view>
     <!-- 猜你喜欢 -->
@@ -228,6 +230,7 @@ page {
         font-size: 60rpx;
         color: #ff9545;
       }
+
       &::after {
         border: none;
       }
