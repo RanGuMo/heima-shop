@@ -158,7 +158,7 @@ const addressText = computed(() => {
       <view class="preview">
         <swiper circular @change="onChange">
           <swiper-item v-for="item in goods?.mainPictures" :key="item">
-            <image @tap="onTapImage(item)" mode="aspectFill" :src="item" />
+            <image class="image" @tap="onTapImage(item)" mode="aspectFill" :src="item" />
           </swiper-item>
         </swiper>
         <view class="indicator">
@@ -211,6 +211,7 @@ const addressText = computed(() => {
         <!-- 图片详情 -->
         <image
           mode="widthFix"
+          class="image"
           v-for="item in goods?.details.pictures"
           :key="item"
           :src="item"

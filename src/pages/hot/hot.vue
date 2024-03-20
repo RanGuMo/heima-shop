@@ -1,9 +1,9 @@
 // /src/pages/hot/hot.vue
 <script setup lang="ts">
-import { onLoad } from '@dcloudio/uni-app';
-import { getHotRecommendAPI } from '@/services/hot';
+import { onLoad } from '@dcloudio/uni-app'
+import { getHotRecommendAPI } from '@/services/hot'
 import { ref } from 'vue'
-import type { SubTypeItem } from '@/types/hot';
+import type { SubTypeItem } from '@/types/hot'
 // 热门推荐页 标题和url
 const hotMap = [
   { type: '1', title: '特惠推荐', url: '/hot/preference' },
@@ -18,10 +18,9 @@ const query = defineProps<{
 }>()
 console.log(query)
 
-const currHot = hotMap.find(v => v.type === query.type)
+const currHot = hotMap.find((v) => v.type === query.type)
 // 动态设置标题
 uni.setNavigationBarTitle({ title: currHot!.title })
-
 
 // 推荐封面图
 const bannerPicture = ref('')
@@ -37,12 +36,11 @@ const getHotRecommendData = async () => {
     page: import.meta.env.DEV ? 30 : 1,
     pageSize: 10,
   })
-  console.log("获取热门推荐数据: ", res);
+  console.log('获取热门推荐数据: ', res)
   // 保存封面图
   bannerPicture.value = res.result.bannerPicture
   // 保存推荐选项
   subTypes.value = res.result.subTypes
-
 }
 
 // 滚动触底事件
@@ -64,41 +62,55 @@ const onScrolltolower = async () => {
   const res = await getHotRecommendAPI(currHot!.url, {
     subType: currSubTypes.id,
     page: currSubTypes.goodsItems.page,
-    pageSize: currSubTypes.goodsItems.pageSize
+    pageSize: currSubTypes.goodsItems.pageSize,
   })
   // 提取新数据
   const newSubTypes = res.result.subTypes[activeIndex.value]
   // 当前选项数组追加
   currSubTypes.goodsItems.items.push(...newSubTypes.goodsItems.items)
-  console.log("滚动触底事件: ", res);
-
+  console.log('滚动触底事件: ', res)
 }
 
 // 页面加载
 onLoad(() => {
   getHotRecommendData()
 })
-
 </script>
 
 <template>
   <view class="viewport">
     <!-- 推荐封面图 -->
     <view class="cover">
-      <image :src="bannerPicture">
-      </image>
+      <image class="image" :src="bannerPicture"> </image>
     </view>
     <!-- 推荐选项 -->
     <view class="tabs">
-      <text class="text" v-for="(item, index) in subTypes" :key="item.id" :class="{ active: activeIndex === index }"
-        @tap="activeIndex = index">{{ item.title }}</text>
+      <text
+        class="text"
+        v-for="(item, index) in subTypes"
+        :key="item.id"
+        :class="{ active: activeIndex === index }"
+        @tap="activeIndex = index"
+        >{{ item.title }}</text
+      >
     </view>
     <!-- 推荐列表 -->
-    <scroll-view scroll-y class="scroll-view" v-for="(item, index) in subTypes" :key="item.id"
-      v-show="activeIndex === index" @scrolltolower="onScrolltolower">
+    <scroll-view
+      scroll-y
+      class="scroll-view"
+      v-for="(item, index) in subTypes"
+      :key="item.id"
+      v-show="activeIndex === index"
+      @scrolltolower="onScrolltolower"
+    >
       <view class="goods">
-        <navigator hover-class="none" class="navigator" v-for="goods in item.goodsItems.items" :key="goods.id"
-          :url="`/pages/goods/goods?id=${goods.id}`">
+        <navigator
+          hover-class="none"
+          class="navigator"
+          v-for="goods in item.goodsItems.items"
+          :key="goods.id"
+          :url="`/pages/goods/goods?id=${goods.id}`"
+        >
           <image class="thumb" :src="goods.picture"></image>
           <view class="name ellipsis">{{ goods.name }}</view>
           <view class="price">
@@ -107,7 +119,7 @@ onLoad(() => {
           </view>
         </navigator>
       </view>
-      <view class="loading-text"> 
+      <view class="loading-text">
         {{ item.finish ? '没有更多数据了~' : '正在加载...' }}
       </view>
     </scroll-view>
@@ -136,6 +148,9 @@ page {
   position: absolute;
   left: 0;
   top: 0;
+  .image {
+    width: 750rpx;
+  }
 }
 
 .scroll-view {
