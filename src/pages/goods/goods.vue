@@ -151,7 +151,7 @@ const addressText = computed(() => {
   />
   <!-- 弹窗测试 -->
   <!-- <button @tap="isShowSku = true">打开 SKU 弹窗</button> -->
-  <scroll-view v-if="isFinish" scroll-y class="viewport">
+  <scroll-view enable-back-to-top v-if="isFinish" scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
       <!-- 商品主图 -->

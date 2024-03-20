@@ -30,7 +30,7 @@ const orderTypes = [
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top @scrolltolower="onScrolltolower">
+  <scroll-view enable-back-to-top class="viewport" scroll-y @scrolltolower="onScrolltolower">
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
       <!-- 情况1：已登录 -->

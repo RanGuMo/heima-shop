@@ -96,6 +96,7 @@ onLoad(() => {
     </view>
     <!-- 推荐列表 -->
     <scroll-view
+      enable-back-to-top
       scroll-y
       class="scroll-view"
       v-for="(item, index) in subTypes"
@@ -148,6 +149,7 @@ page {
   position: absolute;
   left: 0;
   top: 0;
+
   .image {
     width: 750rpx;
   }

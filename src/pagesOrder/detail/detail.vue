@@ -44,7 +44,7 @@ const query = defineProps<{
 
 // 获取页面栈
 const pages = getCurrentPages()
-
+// #ifdef MP-WEIXIN
 // 获取当前页面实例，数组最后一项
 const pageInstance = pages.at(-1) as any
 
@@ -77,7 +77,7 @@ onReady(() => {
     endScrollOffset: 50,
   })
 })
-
+// #endif
 // 获取订单详情
 const order = ref<OrderResult>()
 const getMemberOrderByIdData = async () => {
@@ -118,7 +118,7 @@ const onOrderPay = async () => {
     // #ifdef MP-WEIXIN
     // 正式环境微信支付
     const res = await getPayWxPayMiniPayAPI({ orderId: query.id })
-    wx.requestPayment(res.result)
+    await wx.requestPayment(res.result)
     // #endif
   }
   // 关闭当前页，再跳转支付结果页
