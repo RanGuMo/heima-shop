@@ -19,8 +19,6 @@ const orderTabs = ref([
   { orderState: 3, title: '待收货', isRender: false },
   { orderState: 4, title: '待评价', isRender: false },
 ])
-// 默认渲染容器
-orderTabs.value[activeIndex.value].isRender = true
 
 // 1.获取页面参数
 const query = defineProps<{
@@ -28,6 +26,9 @@ const query = defineProps<{
 }>()
 // 1.1.高亮下标
 const activeIndex = ref(orderTabs.value.findIndex((v) => v.orderState === Number(query.type)))
+
+// 默认渲染容器
+orderTabs.value[activeIndex.value].isRender = true
 </script>
 
 <template>
